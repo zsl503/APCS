@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>我的主机(●'◡'●)</title>
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    </head>
+    <body>
+        <h2>脚本运行时间:</h2>
+        <p1 id="beginTime">None</p1>
+        <h2>ipv6:</h2>
+        <p1 id="ipv6">None</p1>
+        <h2>更新时间：</h2>
+        <p1 id="updateTime">None</p1>
+        <h2>运行状态：</h2>
+        <p1 id="runStatus">None</p1>
+        <form style="margin-top:30px" action="http://xxxxx/MyPC" method="post">
+            <input type="hidden" name="code" value="2"></input>
+            <button style="color:red;width:150px;height:35px" name="opt" value="shutdown">关闭电脑</button>
+        </form>
+        <form style="margin-top:30px" action="http://xxxxx/MyPC" method="post">
+            <input type="hidden" name="code" value="3"></input>
+            <button style="color:red;width:150px;height:35px" name="opt" value="shutdown">强制关闭电脑</button>
+        </form>
+        <form style="margin-top:30px" action="http://xxxxx/MyPC" method="post">
+            <input type="hidden" name="code" value="4"></input>
+            <button style="color:red;width:150px;height:35px" name="opt" value="shutdown">重启电脑</button>
+        </form>
+        <form style="margin-top:30px" action="http://xxxxx/MyPC" method="post">
+            <input type="hidden" name="code" value="5"></input>
+            <button style="color:red;width:150px;height:35px" name="opt" value="shutdown">打开电脑</button>
+        </form>
+    </body>
+</html>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    updateStatus()
+    window.setInterval(updateStatus, 1500)
+    function updateStatus() {
+        beginTime = document.getElementById('beginTime')
+        ipv6 = document.getElementById('ipv6')
+        updateTime = document.getElementById('updateTime')
+        runStatus = document.getElementById('runStatus')
+        $.ajax({
+            type: "post",  // 请求方式
+            url: "http://xxxxx/MyPC",  // 目标资源
+            data: {'code':'-1'}, // 请求参数
+            success: function (res) {
+                const data = JSON.parse(res)
+                beginTime.innerText  = data["beginTime"]
+                ipv6.innerText  = data["ipv6"]
+                updateTime.innerText  = data["updateTime"]
+                runStatus.innerText  = data["runStatus"] !== "None"?data["runStatus"]:"设备不在线"
+            },
+            error:function(res) {
+                console.log(res)
+                const show = '无法连接服务器，请确保网络通畅'
+                beginTime.innerText  = show
+                ipv6.innerText  = show
+                updateTime.innerText  = show
+                runStatus.innerText  = show
+            }
+            
+        });
+    }
+</script>
